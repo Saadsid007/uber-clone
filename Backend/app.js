@@ -3,6 +3,7 @@ dotenv.config();
 const cors = require('cors');
 const express = require('express');
 const app = express();
+const cookieParser = require('cookie-parser'); // <-- Add this line
 const connectDB = require('./db/db');
 const userRoutes = require('./routes/user.routes');
 const userModel = require('./models/user.model');
@@ -10,7 +11,7 @@ const userModel = require('./models/user.model');
 connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cookieParser()); // <-- Add this line
 
 app.use(cors());
 

@@ -66,3 +66,151 @@ Content-Type: application/json
   ]
 }
 ```
+
+## Endpoint: `/users/login`
+
+### Description
+This endpoint allows an existing user to log in. It validates the input data, checks the credentials, and returns an authentication token and user data if successful.
+
+### Method
+`POST`
+
+### Required Data
+The request body must include:
+- `email` (string): A valid email address.
+- `password` (string): The user's password (minimum 6 characters).
+
+### Status Codes
+- `200 OK`: Login successful.
+- `400 Bad Request`: Validation errors or missing/invalid data.
+- `401 Unauthorized`: Invalid email or password.
+
+### Example Request
+```json
+POST /users/login
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+```
+
+### Example Response
+#### Success Response (200 OK)
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "_id": "64f1a2b3c4d5e6f7890g1234",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "socketID": null
+  }
+}
+```
+
+#### Error Response (400 Bad Request)
+```json
+{
+  "errors": [
+    {
+      "msg": "Please provide a valid email address",
+      "param": "email",
+      "location": "body"
+    }
+  ]
+}
+```
+
+#### Error Response (401 Unauthorized)
+```json
+{
+  "message": "Invalid email or password"
+}
+```
+
+## Endpoint: `/users/profile`
+
+### Description
+Returns the authenticated user's profile information. Requires a valid authentication token (JWT) in the cookie or Authorization header.
+
+### Method
+`GET`
+
+### Authentication
+- Requires JWT token in cookie (`token`) or in header (`Authorization: Bearer <token>`).
+
+### Status Codes
+- `200 OK`: Returns user profile.
+- `401 Unauthorized`: Missing or invalid token.
+
+### Example Request
+```
+GET /users/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+### Example Response
+#### Success Response (200 OK)
+```json
+{
+  "user": {
+    "_id": "64f1a2b3c4d5e6f7890g1234",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "socketID": null
+  }
+}
+```
+
+#### Error Response (401 Unauthorized)
+```json
+{
+  "message": "Unauthorized, token missing"
+}
+```
+
+---
+
+## Endpoint: `/users/logout`
+
+### Description
+Logs out the authenticated user by clearing the authentication cookie and blacklisting the token. Requires a valid authentication token.
+
+### Method
+`GET`
+
+### Authentication
+- Requires JWT token in cookie (`token`) or in header (`Authorization: Bearer <token>`).
+
+### Status Codes
+- `200 OK`: Logout successful.
+- `401 Unauthorized`: Missing or invalid token.
+
+### Example Request
+```
+GET /users/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+### Example Response
+#### Success Response (200 OK)
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+#### Error Response (401 Unauthorized)
+```json
+{
+  "message": "Unauthorized, token missing"
+}
+```
