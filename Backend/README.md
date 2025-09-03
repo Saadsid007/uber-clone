@@ -285,3 +285,164 @@ Content-Type: application/json
   ]
 }
 ```
+
+## Endpoint: `/captains/login`
+
+### Description
+Allows a captain to log in. Validates credentials and returns an authentication token and captain data.
+
+### Method
+`POST`
+
+### Required Data
+- `email` (string): A valid email address.
+- `password` (string): The captain's password.
+
+### Status Codes
+- `200 OK`: Login successful.
+- `400 Bad Request`: Validation errors or missing/invalid data.
+- `401 Unauthorized`: Invalid email or password.
+
+### Example Request
+```json
+POST /captains/login
+Content-Type: application/json
+
+{
+  "email": "ravikumar@example.com",
+  "password": "Password123"
+}
+```
+
+### Example Response
+#### Success Response (200 OK)
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "captain": {
+    "_id": "64f1a2b3c4d5e6f7890g1234",
+    "fullName": {
+      "firstName": "Ravish",
+      "lastName": "Kumar"
+    },
+    "email": "ravikumar@example.com",
+    "vehicle": {
+      "color": "Black",
+      "plate": "DL8CAF1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+    // ...other fields
+  }
+}
+```
+
+#### Error Response (400 Bad Request)
+```json
+{
+  "errors": [
+    {
+      "msg": "Please provide a valid email address",
+      "param": "email",
+      "location": "body"
+    }
+  ]
+}
+```
+
+#### Error Response (401 Unauthorized)
+```json
+{
+  "message": "Invalid email or password"
+}
+```
+
+---
+
+## Endpoint: `/captains/profile`
+
+### Description
+Returns the authenticated captain's profile information. Requires a valid authentication token.
+
+### Method
+`GET`
+
+### Authentication
+- Requires JWT token in cookie (`token`) or in header (`Authorization: Bearer <token>`).
+
+### Status Codes
+- `200 OK`: Returns captain profile.
+- `401 Unauthorized`: Missing or invalid token.
+
+### Example Request
+```
+GET /captains/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+### Example Response
+#### Success Response (200 OK)
+```json
+{
+  "captain": {
+    "_id": "64f1a2b3c4d5e6f7890g1234",
+    "fullName": {
+      "firstName": "Ravish",
+      "lastName": "Kumar"
+    },
+    "email": "ravikumar@example.com",
+    "vehicle": {
+      "color": "Black",
+      "plate": "DL8CAF1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+    // ...other fields
+  }
+}
+```
+
+#### Error Response (401 Unauthorized)
+```json
+{
+  "message": "Unauthorized, token missing"
+}
+```
+
+---
+
+## Endpoint: `/captains/logout`
+
+### Description
+Logs out the authenticated captain by clearing the authentication cookie and blacklisting the token.
+
+### Method
+`POST`
+
+### Authentication
+- Requires JWT token in cookie (`token`) or in header (`Authorization: Bearer <token>`).
+
+### Status Codes
+- `200 OK`: Logout successful.
+- `401 Unauthorized`: Missing or invalid token.
+
+### Example Request
+```
+POST /captains/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+### Example Response
+#### Success Response (200 OK)
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+#### Error Response (401 Unauthorized)
+```json
+{
+  "message": "Unauthorized, token missing"
+}
+```
