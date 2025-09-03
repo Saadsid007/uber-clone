@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config(); 
 const cors = require('cors');
 const express = require('express');
 const app = express();
@@ -15,7 +15,6 @@ app.use(cookieParser()); // <-- Add this line
 
 app.use(cors());
 
-// Add this test route in your server.js
 app.get('/test/all-users', async (req, res) => {
     try {
         const users = await userModel.find({});
