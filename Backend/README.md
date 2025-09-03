@@ -214,3 +214,74 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
   "message": "Unauthorized, token missing"
 }
 ```
+
+## Endpoint: `/captains/register`
+
+### Description
+This endpoint is used to register a new captain (driver). It validates the input data, hashes the password, and creates a new captain in the database. Upon successful registration, it returns a success message and an authentication token.
+
+### Method
+`POST`
+
+### Required Data
+The request body must include the following fields:
+- `fullName.firstName` (string): The first name of the captain (minimum 3 characters).
+- `fullName.lastName` (string): The last name of the captain (minimum 3 characters).
+- `email` (string): A valid email address.
+- `password` (string): A password (minimum 6 characters).
+- `vehicle.color` (string): Vehicle color.
+- `vehicle.plate` (string): Vehicle plate number.
+- `vehicle.capacity` (integer): Vehicle capacity (minimum 1).
+- `vehicle.vehicleType` (string): Vehicle type (`car`, `bike`, `auto`, or `suv`).
+
+### Status Codes
+- `201 Created`: Captain registered successfully.
+- `400 Bad Request`: Validation errors or missing/invalid data.
+
+### Example Request
+```json
+POST /captains/register
+Content-Type: application/json
+
+{
+  "fullName": {
+    "firstName": "Ravish",
+    "lastName": "Kumar"
+  },
+  "email": "ravikumar@example.com",
+  "password": "Password123",
+  "vehicle": {
+    "color": "Black",
+    "plate": "DL8CAF1234",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+### Example Response
+#### Success Response (201 Created)
+```json
+{
+  "message": "Captian registered successfully",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+#### Error Response (400 Bad Request)
+```json
+{
+  "errors": [
+    {
+      "msg": "First name must be at least 3 characters long",
+      "param": "fullName.firstName",
+      "location": "body"
+    },
+    {
+      "msg": "Vehicle type must be one of car, bike, auto, suv",
+      "param": "vehicle.vehicleType",
+      "location": "body"
+    }
+  ]
+}
+```
