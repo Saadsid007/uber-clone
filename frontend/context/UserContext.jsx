@@ -4,8 +4,8 @@ export const UserStateContext = React.createContext();
 
 const UserContext = ({ children }) => {
   const [user, setuser] = useState({
-    firstname: "",
-    lastname: "",
+    firstName: "",
+    lastName: "",
     email: "",
   });
   return (

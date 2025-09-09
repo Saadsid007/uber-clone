@@ -1,18 +1,46 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { UserStateContext } from "../context/UserContext";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [userData, setUserData] = useState({});
+    const navigate = useNavigate();
+    const { user, setuser } = React.useContext(UserStateContext);
+
   
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
       const data = {
         email: email,
         password: password,
       };
-      setUserData(data);
+
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_BASE_URL}/users/login`, data
+        );
+        console.log("Backend Response:", response);
+        if (response.status === 200 || response.status === 201) {
+          const data = response.data;
+          setuser(data.user);
+          localStorage.setItem("token", data.token);
+          setUserData(data.user);
+          navigate("/home");
+        } else {
+          console.error("Login failed with status:", response.status);
+        }
+      } catch (error) {
+        if (error.response) {
+          console.error("Backend Error:", error.response.data);
+        } else {
+          console.error("Error during login:", error);
+        } 
+      }
+      
       setEmail("");
       setPassword("");
     };
