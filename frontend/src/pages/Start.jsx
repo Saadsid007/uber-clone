@@ -1,5 +1,5 @@
 import React from "react";
-import { arrowForward } from "../src/assets/assets";
+import { arrowForward } from "../assets/assets";
 import { Link } from "react-router-dom";
 
 const Start = () => {
